@@ -34,21 +34,21 @@ program example
     c(:) = -1
 
     call system_clock(t0, cpu_rate)
-    call special_algorithm(v_s(1:n), d_s)
-    call system_clock(t1, cpu_rate)
     call general_algorithm(a, b, c, d_g, v_g(1:n))
+    call system_clock(t1, cpu_rate)
+    call special_algorithm(v_s(1:n), d_s)
     call system_clock(t2, cpu_rate)
 
     write(*,*) cpu_rate
 
-    write(*,*) "Time for special algorithm:", real(t1-t0, kind=dp)/cpu_rate
-    write(*,*) "Time for general algorithm:", real(t2-t1, kind=dp)/cpu_rate
+    write(*,*) "Time for general algorithm:", real(t1-t0, kind=dp)/cpu_rate
+    write(*,*) "Time for special algorithm:", real(t2-t1, kind=dp)/cpu_rate
 
     open(newunit=outfile, file="results.dat", status="replace")
 
     write(outfile, *) "x special general exact"
 
-    do i = 0, n+1
+    do i = 0, n+1, max(1, (n+1)/100)
         write(outfile, *) x(i), v_s(i), v_g(i), exact(i)
     end do
 

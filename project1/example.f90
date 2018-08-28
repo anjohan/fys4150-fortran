@@ -43,8 +43,3 @@ program example
 
     close(outfile)
 end program
-
-
-
-
-

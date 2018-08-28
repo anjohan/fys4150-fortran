@@ -1,0 +1,8 @@
+set key autotitle columnheader
+
+set xlabel "x"
+set ylabel "u"
+
+plot for[i=2:4] "results.dat" u 1:i w l
+
+pause -1

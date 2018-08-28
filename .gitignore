@@ -1,3 +1,7 @@
+example
+*.dat
+build/
+
 # Prerequisites
 *.d
 

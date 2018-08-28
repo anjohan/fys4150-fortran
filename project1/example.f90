@@ -1,15 +1,13 @@
 program example
     use general, only: general_algorithm, dp
     use special, only: special_algorithm
-    use iso_fortran_env, only: int64
     implicit none
 
-    real(dp) :: h
+    real(dp) :: h, t_s, t_g
     real(dp), allocatable :: a(:), b(:), c(:), x(:), f(:), exact(:), &
                              d_s(:), d_g(:), v_s(:), v_g(:)
     integer :: n_pow, n, i, outfile
 
-    integer(int64) :: t0, t1, t2, cpu_rate
 
     write(*,*) "Give log10(n):"
     read(*,*) n_pow
@@ -33,16 +31,11 @@ program example
     b(:) = 2
     c(:) = -1
 
-    call system_clock(t0, cpu_rate)
-    call general_algorithm(a, b, c, d_g, v_g(1:n))
-    call system_clock(t1, cpu_rate)
-    call special_algorithm(v_s(1:n), d_s)
-    call system_clock(t2, cpu_rate)
+    t_g = general_algorithm(a, b, c, d_g, v_g(1:n))
+    t_s = special_algorithm(v_s(1:n), d_s)
 
-    write(*,*) cpu_rate
-
-    write(*,*) "Time for general algorithm:", real(t1-t0, kind=dp)/cpu_rate
-    write(*,*) "Time for special algorithm:", real(t2-t1, kind=dp)/cpu_rate
+    write(*,*) "Time for general algorithm:", t_g
+    write(*,*) "Time for special algorithm:", t_s
 
     open(newunit=outfile, file="results.dat", status="replace")
 

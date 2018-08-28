@@ -1,20 +1,29 @@
 module special
+    use iso_fortran_env, only: int64
     implicit none
 
     integer, parameter :: dp = kind(1.0d0)
 
     contains
-        subroutine special_algorithm(v, d)
+        function special_algorithm(v, d) result(t)
             real(dp), intent(inout) :: v(:), d(:)
             real(dp), allocatable   :: b(:)
             integer :: n, i
 
+            real(dp) :: t
+            integer(int64) :: t1, t2, cpu_rate
+
             n = size(v)
 
-            b = [((i+1.0d0)/i, i = 1, n)]
+            allocate(b(n))
+
+            call system_clock(t1, cpu_rate)
+
+            b(1) = 2
 
             ! row reduction
             do i = 2, n
+                b(i) = (i+1.0d0)/i
                 d(i) = d(i) + d(i-1)/b(i-1)
             end do
 
@@ -24,5 +33,9 @@ module special
             do i = n-1, 1, -1
                 v(i) = (d(i) + v(i+1))/b(i)
             end do
-        end subroutine
+
+            call system_clock(t2, cpu_rate)
+
+            t = real(t2 - t1, kind=dp)/cpu_rate
+        end function
 end module

@@ -34,9 +34,9 @@ program example
     c(:) = -1
 
     call system_clock(t0, cpu_rate)
-    call special_algorithm(v_s(1:n), d_s(1:n))
+    call special_algorithm(v_s(1:n), d_s)
     call system_clock(t1, cpu_rate)
-    call general_algorithm(a, b, c, d_g(1:n), v_g(1:n))
+    call general_algorithm(a, b, c, d_g, v_g(1:n))
     call system_clock(t2, cpu_rate)
 
     write(*,*) cpu_rate

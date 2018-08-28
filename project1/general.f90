@@ -14,11 +14,9 @@ module general
 
             ! row reduction
             do i = 2, n
-                if (a(i-1) /= 0) then
-                    r    = a(i-1)/b(i-1)
-                    b(i) = b(i) - c(i-1)*r
-                    d(i) = d(i) - d(i-1)*r
-                end if
+                r    = a(i-1)/b(i-1)
+                b(i) = b(i) - c(i-1)*r
+                d(i) = d(i) - d(i-1)*r
             end do
 
             v(n) = d(n)/b(n)

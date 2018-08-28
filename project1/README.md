@@ -3,6 +3,8 @@
 ## Compilation
 Use CMake, or compile manually.
 
+The program asks for `log10(n)`. A value of `2` means that 100 points will be used.
+
 ### CMake
 ```
 mkdir build

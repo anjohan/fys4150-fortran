@@ -3,7 +3,7 @@
 ## Compilation
 Use CMake, or compile manually.
 
-### CMake:
+### CMake
 ```
 mkdir build
 cd build

@@ -5,8 +5,8 @@ module special
     integer, parameter :: dp = kind(1.0d0)
 
     contains
-        function special_algorithm(v, d) result(t)
-            real(dp), intent(inout) :: v(:), d(:)
+        function special_algorithm(d, v) result(t)
+            real(dp), intent(inout) :: d(:), v(:)
             real(dp), allocatable   :: b(:)
             integer :: n, i
 

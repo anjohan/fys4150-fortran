@@ -32,7 +32,7 @@ program example
     c(:) = -1
 
     t_g = general_algorithm(a, b, c, d_g, v_g(1:n))
-    t_s = special_algorithm(v_s(1:n), d_s)
+    t_s = special_algorithm(d_s, v_s(1:n))
 
     write(*,*) "Time for general algorithm:", t_g
     write(*,*) "Time for special algorithm:", t_s

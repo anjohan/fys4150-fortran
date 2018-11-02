@@ -1,6 +1,6 @@
 # Project 4
 
-![uml-diagram](uml.svg)
+![plot](fig.svg)
 
 Parallelised using coarrays.
 

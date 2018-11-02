@@ -5,14 +5,18 @@ program example
 
     type(ising) :: sim
     integer, allocatable :: Ls(:)
-    real(real64), allocatable :: Ts(:)
+    real(real64), allocatable :: Ts(:), Tmax, Tmin
 
     integer :: i, j, num_Ls, num_Ts, u_E, u_M, u_CV, u_chi
 
-    Ts = [(2.2d0 + 0.04*i, i = 0, 5)]
-    Ls = [80]
+    num_Ts = 50
+    Tmin = 2.2d0
+    Tmax = 2.4d0
+    Ts = [(Tmin + i*(Tmax-Tmin)/(num_Ts-1), i = 0, num_Ts-1)]
+    Ls = [(40*i, i = 1, 6)]
 
     num_Ts = size(Ts); num_Ls = size(Ls)
+
 
     if (this_image() == 1) then
         open(newunit=u_E, file="E.dat", status="replace")
@@ -23,6 +27,8 @@ program example
         write(u_CV, "('T', *(:,x,'L=',i0))") Ls
         open(newunit=u_chi, file="chi.dat", status="replace")
         write(u_chi, "('T', *(:,x,'L=',i0))") Ls
+
+        write(*,"(a,x,i0,x,a)") "Using", num_images(), "images"
     end if
 
     do j = 1, size(Ts)
@@ -37,14 +43,14 @@ program example
             write(*,*) "T = ", Ts(j), ", L = ", Ls(i)
             call sim%init(Ls(i), Ts(j))
 
-            call sim%metropolis(500)
-            call sim%metropolis(nint(1.0d5))
+            call sim%metropolis(320*20000)
+            call sim%metropolis(nint(3.2d7))
 
             if (this_image() == 1) then
-                write(u_E, "(x,f15.6)", advance="no") sim%E
-                write(u_M, "(x,f15.6)", advance="no") sim%M
-                write(u_CV, "(x,f15.6)", advance="no") sim%C_V
-                write(u_chi, "(x,f15.6)", advance="no") sim%chi
+                write(u_E, "(x,f0.6)", advance="no") sim%E
+                write(u_M, "(x,f0.6)", advance="no") sim%absM
+                write(u_CV, "(x,f0.6)", advance="no") sim%C_V
+                write(u_chi, "(x,f0.6)", advance="no") sim%chi
             end if
         end do
 

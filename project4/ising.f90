@@ -5,7 +5,8 @@ module mod_ising
     type ising
         integer, allocatable :: lattice(:,:), index_map(:), is(:), js(:)
         integer :: L
-        real(real64) :: E, E2, M, absM, M2, T, beta, C_V, chi
+        real(real64) :: E, E2, M, absM, M2, T, beta, C_V, chi, &
+                        current_E, current_M
         real(real64), allocatable :: exps(:), tmp_reals(:,:)
 
         contains
@@ -19,7 +20,7 @@ module mod_ising
 
             integer :: cycles_per_image, i, norm
 
-            self%M = sum(self%lattice)
+            self%current_M = sum(self%lattice)
             call self%energy()
             call self%reset_expvals()
 
@@ -59,7 +60,7 @@ module mod_ising
             class(ising), intent(inout) :: self
             integer :: i, j
 
-            associate(E => self%E, l => self%lattice, map => self%index_map)
+            associate(E => self%current_E, l => self%lattice, map => self%index_map)
                 E = 0
                 do j = 0, self%L-1
                     do i = 0, self%L-1
@@ -101,15 +102,17 @@ module mod_ising
                     !write(*,*) "Accepted", self%E, self%M
                         lattice(i,j) = - lattice(i,j)
                         self%E = self%E + dE
-                        self%M = self%M + 2*lattice(i,j)
+                        self%current_M = self%current_M + 2*lattice(i,j)
                     end if
                 end associate
                 end associate
             end do
 
-            self%E2 = self%E2 + self%E**2
-            self%absM = self%absM + abs(self%M)
-            self%M2 = self%M2 + self%M**2
+            self%E = self%E + self%current_E
+            self%E2 = self%E2 + self%current_E**2
+            self%M = self%M + self%current_M
+            self%absM = self%absM + abs(self%current_M)
+            self%M2 = self%M2 + self%current_M**2
         end subroutine
 
         subroutine init(self, L, T)
@@ -159,6 +162,6 @@ module mod_ising
         subroutine reset_expvals(self)
             class(ising), intent(inout) :: self
 
-             self%E2 = 0; self%absM = 0; self%M2 = 0
+             self%E = 0; self%M = 0; self%E2 = 0; self%absM = 0; self%M2 = 0
         end subroutine
 end module

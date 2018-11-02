@@ -4,19 +4,21 @@ program example
     implicit none
 
     type(ising) :: sim
-    integer, allocatable :: Ls(:)
+    integer, allocatable :: Ls(:), equilibration_cycles, simulation_cycles
     real(real64), allocatable :: Ts(:), Tmax, Tmin
 
     integer :: i, j, num_Ls, num_Ts, u_E, u_M, u_CV, u_chi
 
-    num_Ts = 50
+    num_Ts = 5
     Tmin = 2.2d0
     Tmax = 2.4d0
     Ts = [(Tmin + i*(Tmax-Tmin)/(num_Ts-1), i = 0, num_Ts-1)]
-    Ls = [(40*i, i = 1, 6)]
+    Ls = [(20*i, i = 2, 5)]
+
+    equilibration_cycles = 10000*num_images()
+    simulation_cycles = 100000*num_images()
 
     num_Ts = size(Ts); num_Ls = size(Ls)
-
 
     if (this_image() == 1) then
         open(newunit=u_E, file="E.dat", status="replace")
@@ -43,8 +45,8 @@ program example
             write(*,*) "T = ", Ts(j), ", L = ", Ls(i)
             call sim%init(Ls(i), Ts(j))
 
-            call sim%metropolis(320*20000)
-            call sim%metropolis(nint(3.2d7))
+            call sim%metropolis(equilibration_cycles)
+            call sim%metropolis(simulation_cycles)
 
             if (this_image() == 1) then
                 write(u_E, "(x,f0.6)", advance="no") sim%E

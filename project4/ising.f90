@@ -101,7 +101,7 @@ module mod_ising
                     if (accept) then
                     !write(*,*) "Accepted", self%E, self%M
                         lattice(i,j) = - lattice(i,j)
-                        self%E = self%E + dE
+                        self%current_E = self%current_E + dE
                         self%current_M = self%current_M + 2*lattice(i,j)
                     end if
                 end associate

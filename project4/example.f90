@@ -9,11 +9,11 @@ program example
 
     integer :: i, j, num_Ls, num_Ts, u_E, u_M, u_CV, u_chi
 
-    num_Ts = 5
+    num_Ts = 40
     Tmin = 2.2d0
     Tmax = 2.4d0
     Ts = [(Tmin + i*(Tmax-Tmin)/(num_Ts-1), i = 0, num_Ts-1)]
-    Ls = [(20*i, i = 2, 5)]
+    Ls = [(50*i, i = 1, 5)]
 
     equilibration_cycles = 10000*num_images()
     simulation_cycles = 100000*num_images()

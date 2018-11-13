@@ -5,12 +5,17 @@ module mod_ising
     type ising
         integer, allocatable :: lattice(:,:), index_map(:), is(:), js(:)
         integer :: L
-        real(real64) :: E, E2, M, absM, M2, T, beta, C_V, chi, &
+        real(real64) :: T, beta, C_V, chi, &
                         current_E, current_M
+        real(real64), codimension[:], allocatable :: E, E2, M, absM, M2
         real(real64), allocatable :: exps(:), tmp_reals(:,:)
 
         contains
-            procedure :: metropolis, one_cycle, init, reset_expvals, energy
+            procedure :: metropolis
+            procedure :: one_cycle
+            procedure :: init
+            procedure :: reset_expvals
+            procedure :: energy
     end type
 
     contains
@@ -30,11 +35,29 @@ module mod_ising
                 call self%one_cycle()
             end do
 
-            call co_sum(self%E)
-            call co_sum(self%E2)
-            call co_sum(self%M)
-            call co_sum(self%M2)
-            call co_sum(self%absM)
+            sync all
+            if (this_image() == 1) then
+                do i = 2, num_images()
+                    self%E[1] = self%E[1] + self%E[i]
+                    self%E2[1] = self%E2[1] + self%E2[i]
+                    self%M[1] = self%M[1] + self%M[i]
+                    self%M2[1] = self%M2[1] + self%M2[i]
+                    self%absM[1] = self%absM[1] + self%absM[i]
+                end do
+            end if
+            sync all
+            if (this_image() /= 1) then
+                self%E[i] = self%E[1]
+                self%E2[i] = self%E2[1]
+                self%M[i] = self%M[1]
+                self%M2[i] = self%M2[1]
+                self%absM[i] = self%absM[1]
+            end if
+            !call co_sum(self%E)
+            !call co_sum(self%E2)
+            !call co_sum(self%M)
+            !call co_sum(self%M2)
+            !call co_sum(self%absM)
 
             norm = num_cycles
 
@@ -156,12 +179,14 @@ module mod_ising
             if (allocated(self%js)) deallocate(self%js)
             allocate(self%js(L**2))
 
+            allocate(self%E[*], self%M[*], self%E2[*], self%absM[*], self%M2[*])
             call self%reset_expvals()
         end subroutine
 
         subroutine reset_expvals(self)
             class(ising), intent(inout) :: self
 
-             self%E = 0; self%M = 0; self%E2 = 0; self%absM = 0; self%M2 = 0
+
+            self%E = 0; self%M = 0; self%E2 = 0; self%absM = 0; self%M2 = 0
         end subroutine
 end module

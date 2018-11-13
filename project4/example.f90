@@ -13,7 +13,7 @@ program example
     Tmin = 2.2d0
     Tmax = 2.4d0
     Ts = [(Tmin + i*(Tmax-Tmin)/(num_Ts-1), i = 0, num_Ts-1)]
-    Ls = [(50*i, i = 1, 5)]
+    Ls = [200, 400]
 
     equilibration_cycles = 10000*num_images()
     simulation_cycles = 100000*num_images()

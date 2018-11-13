@@ -1,0 +1,12 @@
+FC = ifort
+FFLAGS = -fast -warn all -coarray=shared -coarray-config-file=cafconfig.txt
+
+all: example
+
+%: ising.o %.o
+	$(FC) $(FFLAGS) -o $@ $^
+%.o: %.f90 Makefile
+	$(FC) $(FFLAGS) -c $< -o $@
+
+clean:
+	rm -rf example *.o *.mod

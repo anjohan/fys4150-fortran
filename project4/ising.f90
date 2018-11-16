@@ -27,6 +27,9 @@ module mod_ising
             cycles_per_image = num_cycles/num_images()
 
             do i = 1, cycles_per_image
+                if (this_image() == 1 .and. mod(i, cycles_per_image/100) == 1) then
+                    write(*,"('i = ', i0, ', T = ', f0.4, ', L = ', i0)") i, self%T, self%L
+                end if
                 call self%one_cycle()
             end do
 

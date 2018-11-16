@@ -42,7 +42,6 @@ program example
         end if
 
         do i = 1, size(Ls)
-            write(*,*) "T = ", Ts(j), ", L = ", Ls(i)
             call sim%init(Ls(i), Ts(j))
 
             call sim%metropolis(equilibration_cycles)

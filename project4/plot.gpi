@@ -1,33 +1,33 @@
-set terminal svg size 600,1000
+set terminal svg size 1000,800
 set output "fig.svg"
 set xlabel "T"
 set key autotitle columnheader
 
-set multiplot layout 3,1
+set multiplot layout 2,2
 
 set xtics 0.05
 
-stats "E.dat" skip 1
+stats "data/E.dat" skip 1
 set title "Energy"
 set ylabel "<E>/L^2"
 set key top left
-plot for[i=6:STATS_columns] "E.dat" u 1:i w l lw 2
+plot for[i=2:STATS_columns] "data/E.dat" u 1:i w l lw 2
 
-# stats "CV.dat" skip 1
-# set title "Heat capacity"
-# set ylabel "C_V/L^2"
-# plot for[i=6:STATS_columns] "CV.dat" u 1:i w l lw 2
+stats "data/CV.dat" skip 1
+set title "Heat capacity"
+set ylabel "C_V/L^2"
+plot for[i=2:STATS_columns] "data/CV.dat" u 1:i w l lw 2
 
-stats "M.dat" skip 1
+stats "data/M.dat" skip 1
 set title "Magnetisation"
 set ylabel "<|M|>/L^2"
 set key bottom left
-plot for[i=6:STATS_columns] "M.dat" u 1:i w l lw 2
+plot for[i=2:STATS_columns] "data/M.dat" u 1:i w l lw 2
 
-stats "chi.dat" skip 1
+stats "data/chi.dat" skip 1
 set title "Magnetic susceptibility"
 set ylabel "χ/L^2"
 set key top left
-plot for[i=6:STATS_columns] "chi.dat" u 1:i w l lw 2
+plot for[i=2:STATS_columns] "data/chi.dat" u 1:i w l lw 2
 
 unset multiplot

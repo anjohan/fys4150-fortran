@@ -21,13 +21,13 @@ program example
     num_Ts = size(Ts); num_Ls = size(Ls)
 
     if (this_image() == 1) then
-        open(newunit=u_E, file="E.dat", status="replace")
+        open(newunit=u_E, file="data/E.dat", status="replace")
         write(u_E, "('T', *(:,x,'L=',i0))") Ls
-        open(newunit=u_M, file="M.dat", status="replace")
+        open(newunit=u_M, file="data/M.dat", status="replace")
         write(u_M, "('T', *(:,x,'L=',i0))") Ls
-        open(newunit=u_CV, file="CV.dat", status="replace")
+        open(newunit=u_CV, file="data/CV.dat", status="replace")
         write(u_CV, "('T', *(:,x,'L=',i0))") Ls
-        open(newunit=u_chi, file="chi.dat", status="replace")
+        open(newunit=u_chi, file="data/chi.dat", status="replace")
         write(u_chi, "('T', *(:,x,'L=',i0))") Ls
 
         write(*,"(a,x,i0,x,a)") "Using", num_images(), "images"
